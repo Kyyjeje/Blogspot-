@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Byexe Official</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .container {
+            background: #141414;
+            max-width: 400px;
+            width: 100%;
+            padding: 32px 24px 28px;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            border: 1px solid #222;
+        }
+
+        /* Avatar */
+        .avatar {
+            width: 88px;
+            height: 88px;
+            background: linear-gradient(145deg, #1e1e1e, #121212);
+            border-radius: 50%;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: 700;
+            color: #fff;
+            border: 2px solid #2a2a2a;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            user-select: none;
+        }
+
+        /* Nama */
+        .name {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            margin-bottom: 2px;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: #1f1f1f;
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #aaa;
+            border: 1px solid #2c2c2c;
+            margin: 4px 0 10px;
+            letter-spacing: 0.2px;
+        }
+
+        /* Bio */
+        .bio {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            padding: 0 4px;
+        }
+
+        /* Tombol Donasi - Mirip asli */
+        .donate-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #1e1e1e;
+            color: #eee;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            border: 1px solid #333;
+            transition: all 0.2s;
+            margin-bottom: 28px;
+            width: 100%;
+            max-width: 220px;
+        }
+
+        .donate-btn i {
+            font-size: 16px;
+            color: #f5a623;
+        }
+
+        .donate-btn:hover {
+            background: #262626;
+            border-color: #444;
+        }
+
+        /* Grid Sosial - 3 kolom */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .social-item {
+            background: #1a1a1a;
+            padding: 14px 4px;
+            border-radius: 18px;
+            color: #bbb;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #282828;
+            transition: all 0.15s;
+        }
+
+        .social-item i {
+            font-size: 22px;
+            color: #ccc;
+        }
+
+        .social-item span {
+            font-size: 10px;
+            opacity: 0.7;
+            letter-spacing: 0.2px;
+        }
+
+        .social-item:hover {
+            background: #222;
+            border-color: #3a3a3a;
+        }
+
+        .social-item:hover i {
+            color: #fff;
+        }
+
+        /* WhatsApp Channel - 2 kolom */
+        .social-item.wa-channel {
+            grid-column: span 2;
+            flex-direction: row;
+            gap: 10px;
+            padding: 12px 10px;
+        }
+
+        .social-item.wa-channel i {
+            font-size: 20px;
+        }
+
+        .social-item.wa-channel span {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        .footer {
+            font-size: 12px;
+            color: #555;
+            border-top: 1px solid #222;
+            padding-top: 20px;
+            letter-spacing: 0.2px;
+        }
+
+        .footer a {
+            color: #777;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: #999;
+            text-decoration: underline;
+        }
+
+        /* Responsif */
+        @media (max-width: 420px) {
+            .container {
+                padding: 24px 16px 20px;
+                border-radius: 24px;
+            }
+            .avatar {
+                width: 72px;
+                height: 72px;
+                font-size: 30px;
+            }
+            .name {
+                font-size: 22px;
+            }
+            .social-item {
+                padding: 12px 2px;
+                border-radius: 14px;
+            }
+            .social-item i {
+                font-size: 18px;
+            }
+            .donate-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+                max-width: 180px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .social-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .social-item.wa-channel {
+                grid-column: span 2;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Avatar -->
+        <div class="avatar">B</div>
+
+        <!-- Nama -->
+        <div class="name">Byexe</div>
+
+        <!-- Badge -->
+        <div class="badge">Cyber Security | Tech Enthusiast</div>
+
+        <!-- Bio -->
+        <div class="bio">Building modern innovation in the world of emerging technology</div>
+
+        <!-- Tombol Donasi -->
+        <a href="#" class="donate-btn" target="_blank">
+            <i class="fas fa-mug-hot"></i> Saweria / Donasi
+        </a>
+
+        <!-- Grid Sosial Media -->
+        <div class="social-grid">
+
+            <a href="#" class="social-item" target="_blank">
+                <i class="fab fa-github"></i>
+                <span>Github</span>
+            </a>
+
+            <a href="#" class="social-item" target="_blank">
+                <i class="fab fa-tiktok"></i>
+                <span>TikTok</span>
+            </a>
+
+            <a href="#" class="social-item" target="_blank">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+
+            <a href="#" class="social-item" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+
+            <a href="#" class="social-item wa-channel" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp Channel</span>
+            </a>
+
+            <a href="#" class="social-item" target="_blank">
+                <i class="fab fa-telegram-plane"></i>
+                <span>Telegram</span>
+            </a>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            made with <a href="#" target="_blank">@raacodèx</a>
+        </div>
+
+    </div>
+
+</body>
+</html>
