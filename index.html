@@ -396,6 +396,43 @@
         </div>
 
     </div>
+ <!-- ===== JAVASCRIPT TYPING EFFECT ===== -->
+    <script>
+        const text = "Building modern innovation in the world of emerging technology";
+        const typingElement = document.getElementById('typing-text');
+        let index = 0;
+        let isDeleting = false;
 
+        function typeEffect() {
+            if (!isDeleting) {
+                // Mengetik
+                if (index < text.length) {
+                    typingElement.textContent = text.substring(0, index + 1);
+                    index++;
+                    setTimeout(typeEffect, 50); // Kecepatan mengetik
+                } else {
+                    // Selesai mengetik, tunggu sebentar lalu hapus
+                    isDeleting = true;
+                    setTimeout(typeEffect, 3000); // Tunggu 3 detik sebelum menghapus
+                }
+            } else {
+                // Menghapus
+                if (index > 0) {
+                    typingElement.textContent = text.substring(0, index - 1);
+                    index--;
+                    setTimeout(typeEffect, 30); // Kecepatan menghapus
+                } else {
+                    // Selesai menghapus, mulai mengetik lagi
+                    isDeleting = false;
+                    setTimeout(typeEffect, 500);
+                }
+            }
+        }
+
+        // Mulai efek setelah halaman dimuat
+        window.onload = function() {
+            setTimeout(typeEffect, 1000); // Tunggu 1 detik sebelum mulai
+        };
+    </script>
 </body>
 </html>
