@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rizz.yeyo Officiall</title>
+    <title>Rizz.yeyo Official</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         * {
@@ -33,13 +33,26 @@
             border: 1px solid #222;
         }
 
-        /* Avatar */
-        .avatar {
+        /* Avatar - bisa diklik */
+        .avatar-link {
+            display: block;
             width: 88px;
             height: 88px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .avatar-link:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
             background: linear-gradient(145deg, #1e1e1e, #121212);
             border-radius: 50%;
-            margin: 0 auto 14px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -83,7 +96,7 @@
             padding: 0 4px;
         }
 
-        /* Tombol Donasi - Mirip asli */
+        /* Tombol Donasi */
         .donate-btn {
             display: inline-flex;
             align-items: center;
@@ -111,6 +124,7 @@
         .donate-btn:hover {
             background: #262626;
             border-color: #444;
+            transform: translateY(-2px);
         }
 
         /* Grid Sosial - 3 kolom */
@@ -151,6 +165,7 @@
         .social-item:hover {
             background: #222;
             border-color: #3a3a3a;
+            transform: translateY(-3px);
         }
 
         .social-item:hover i {
@@ -200,9 +215,11 @@
                 padding: 24px 16px 20px;
                 border-radius: 24px;
             }
-            .avatar {
+            .avatar-link {
                 width: 72px;
                 height: 72px;
+            }
+            .avatar {
                 font-size: 30px;
             }
             .name {
@@ -236,11 +253,13 @@
 
     <div class="container">
 
-        <!-- Avatar -->
-        <div class="avatar">B</div>
+        <!-- Avatar bisa diklik -->
+        <a href="https://github.com" class="avatar-link" target="_blank">
+            <div class="avatar">R</div>
+        </a>
 
         <!-- Nama -->
-        <div class="name">Byexe</div>
+        <div class="name">Rizz.yeyo</div>
 
         <!-- Badge -->
         <div class="badge">Cyber Security | Tech Enthusiast</div>
@@ -249,48 +268,54 @@
         <div class="bio">Building modern innovation in the world of emerging technology</div>
 
         <!-- Tombol Donasi -->
-        <a href="#" class="donate-btn" target="_blank">
+        <a href="https://saweria.co/" class="donate-btn" target="_blank">
             <i class="fas fa-mug-hot"></i> Saweria / Donasi
         </a>
 
         <!-- Grid Sosial Media -->
         <div class="social-grid">
 
-            <a href="#" class="social-item" target="_blank">
+            <!-- Github -->
+            <a href="https://github.com" class="social-item" target="_blank">
                 <i class="fab fa-github"></i>
                 <span>Github</span>
             </a>
 
-            <a href="#" class="social-item" target="_blank">
+            <!-- Facebook -->
+            <a href="https://facebook.com" class="social-item" target="_blank">
                 <i class="fab fa-facebook"></i>
                 <span>Facebook</span>
             </a>
 
-            <a href="#" class="social-item" target="_blank">
+            <!-- YouTube -->
+            <a href="https://youtube.com" class="social-item" target="_blank">
                 <i class="fab fa-youtube"></i>
                 <span>YouTube</span>
             </a>
 
-            <a href="#" class="social-item" target="_blank">
+            <!-- WhatsApp -->
+            <a href="https://wa.me/6283119846840" class="social-item" target="_blank">
                 <i class="fab fa-whatsapp"></i>
                 <span>WhatsApp</span>
             </a>
 
-            <a href="#" class="social-item wa-channel" target="_blank">
+            <!-- WhatsApp Channel -->
+            <a href="https://whatsapp.com/channel/" class="social-item wa-channel" target="_blank">
                 <i class="fab fa-whatsapp"></i>
                 <span>WhatsApp Channel</span>
             </a>
 
-            <a href="#" class="social-item" target="_blank">
-                <i class="fab fa-telegram-plane"></i>
-                <span>Telegram</span>
+            <!-- Telegram -->
+            <a href="https:rizz.yeyo/" class="social-item" target="_blank">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
             </a>
 
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            made with <a href="#" target="_blank">@raacodèx</a>
+            made with <a href="https://github.com" target="_blank">@raacodèx</a>
         </div>
 
     </div>
