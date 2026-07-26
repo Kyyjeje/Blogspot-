@@ -24,18 +24,6 @@
         }
 
         /* ===== BACKGROUND ===== */
-        /* Opsi 1: Background Video */
-        .bg-video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 0;
-        }
-
-        /* Opsi 2: Background Gambar (gunakan jika video tidak dipakai) */
         .bg-image {
             position: fixed;
             top: 0;
@@ -48,7 +36,6 @@
             z-index: 0;
         }
 
-        /* Overlay gelap agar teks tetap terbaca */
         .overlay {
             position: fixed;
             top: 0;
@@ -59,7 +46,6 @@
             z-index: 1;
         }
 
-        /* Container di atas background */
         .container {
             background: #141414;
             max-width: 400px;
@@ -101,7 +87,7 @@
             display: block;
         }
 
-        /* Nama dengan Verified Badge Biru */
+        /* Nama */
         .name-wrapper {
             display: flex;
             align-items: center;
@@ -163,13 +149,33 @@
             letter-spacing: 0.2px;
         }
 
-        /* Bio */
-        .bio {
+        /* ===== TYPING EFFECT ===== */
+        .bio-wrapper {
             font-size: 14px;
             color: #ccc;
             margin-bottom: 24px;
             line-height: 1.5;
             padding: 0 4px;
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #typing-text {
+            display: inline;
+            border-right: 2px solid #1d9bf0;
+            padding-right: 4px;
+            animation: blink 0.8s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                border-color: #1d9bf0;
+            }
+            50% {
+                border-color: transparent;
+            }
         }
 
         /* Tombol Donasi */
@@ -305,6 +311,10 @@
                 font-size: 13px;
                 max-width: 180px;
             }
+            .bio-wrapper {
+                font-size: 13px;
+                min-height: 20px;
+            }
         }
 
         @media (max-width: 360px) {
@@ -316,17 +326,8 @@
 </head>
 <body>
 
-    <!-- ===== PILIH BACKGROUND DI BAWAH INI ===== -->
-
-    <!-- OPSI 1: Background VIDEO (gunakan salah satu) -->
-    <!-- <video class="bg-video" autoplay muted loop playsinline>
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
-    </video> -->
-
-    <!-- OPSI 2: Background GAMBAR -->
+    <!-- Background -->
     <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80');"></div>
-
-    <!-- Overlay gelap -->
     <div class="overlay"></div>
 
     <div class="container">
@@ -347,8 +348,10 @@
         <!-- Badge -->
         <div class="badge">Cyber Security | Tech Enthusiast</div>
 
-        <!-- Bio -->
-        <div class="bio">Building modern innovation in the world of emerging technology</div>
+        <!-- Bio dengan Typing Effect -->
+        <div class="bio-wrapper">
+            <span id="typing-text"></span>
+        </div>
 
         <!-- Tombol Donasi -->
         <a href="https://saweria.co/" class="donate-btn" target="_blank">
@@ -396,7 +399,8 @@
         </div>
 
     </div>
- <!-- ===== JAVASCRIPT TYPING EFFECT ===== -->
+
+    <!-- ===== JAVASCRIPT TYPING EFFECT ===== -->
     <script>
         const text = "Building modern innovation in the world of emerging technology";
         const typingElement = document.getElementById('typing-text');
@@ -434,5 +438,6 @@
             setTimeout(typeEffect, 1000); // Tunggu 1 detik sebelum mulai
         };
     </script>
+
 </body>
 </html>
