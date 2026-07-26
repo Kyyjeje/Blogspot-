@@ -14,14 +14,52 @@
         }
 
         body {
-            background: #0a0a0a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 16px;
+            position: relative;
+            overflow: hidden;
         }
 
+        /* ===== BACKGROUND ===== */
+        /* Opsi 1: Background Video */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        /* Opsi 2: Background Gambar (gunakan jika video tidak dipakai) */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        /* Overlay gelap agar teks tetap terbaca */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        /* Container di atas background */
         .container {
             background: #141414;
             max-width: 400px;
@@ -30,10 +68,15 @@
             border-radius: 32px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
             text-align: center;
-            border: 1px solid #222;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(20, 20, 20, 0.85);
         }
 
-        /* Avatar - bisa diklik */
+        /* Avatar */
         .avatar-link {
             display: block;
             width: 88px;
@@ -42,6 +85,9 @@
             border-radius: 50%;
             text-decoration: none;
             transition: transform 0.2s;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
         }
 
         .avatar-link:hover {
@@ -51,38 +97,68 @@
         .avatar {
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #1e1e1e, #121212);
-            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Nama dengan Verified Badge Biru */
+        .name-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 38px;
-            font-weight: 700;
-            color: #fff;
-            border: 2px solid #2a2a2a;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-            user-select: none;
+            gap: 8px;
+            margin-bottom: 2px;
         }
 
-        /* Nama */
         .name {
             font-size: 26px;
             font-weight: 700;
             color: #ffffff;
             letter-spacing: -0.3px;
-            margin-bottom: 2px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #1d9bf0;
+            color: #fff;
+            font-size: 14px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(29, 155, 240, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .verified-badge i {
+            font-size: 11px;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 15px rgba(29, 155, 240, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(29, 155, 240, 0.8), 0 0 50px rgba(29, 155, 240, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 15px rgba(29, 155, 240, 0.5);
+            }
         }
 
         /* Badge */
         .badge {
             display: inline-block;
-            background: #1f1f1f;
+            background: rgba(31, 31, 31, 0.8);
             padding: 4px 16px;
             border-radius: 30px;
             font-size: 12px;
             font-weight: 500;
             color: #aaa;
-            border: 1px solid #2c2c2c;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             margin: 4px 0 10px;
             letter-spacing: 0.2px;
         }
@@ -90,7 +166,7 @@
         /* Bio */
         .bio {
             font-size: 14px;
-            color: #999;
+            color: #ccc;
             margin-bottom: 24px;
             line-height: 1.5;
             padding: 0 4px;
@@ -102,18 +178,20 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            background: #1e1e1e;
+            background: rgba(30, 30, 30, 0.8);
             color: #eee;
             padding: 12px 28px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
-            border: 1px solid #333;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.2s;
             margin-bottom: 28px;
             width: 100%;
             max-width: 220px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
         .donate-btn i {
@@ -122,12 +200,12 @@
         }
 
         .donate-btn:hover {
-            background: #262626;
-            border-color: #444;
+            background: rgba(38, 38, 38, 0.9);
+            border-color: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
 
-        /* Grid Sosial - 3 kolom */
+        /* Grid Sosial */
         .social-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -136,7 +214,7 @@
         }
 
         .social-item {
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.8);
             padding: 14px 4px;
             border-radius: 18px;
             color: #bbb;
@@ -147,8 +225,10 @@
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            border: 1px solid #282828;
+            border: 1px solid rgba(255, 255, 255, 0.04);
             transition: all 0.15s;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
         .social-item i {
@@ -163,8 +243,8 @@
         }
 
         .social-item:hover {
-            background: #222;
-            border-color: #3a3a3a;
+            background: rgba(34, 34, 34, 0.9);
+            border-color: rgba(255, 255, 255, 0.12);
             transform: translateY(-3px);
         }
 
@@ -172,40 +252,23 @@
             color: #fff;
         }
 
-        /* WhatsApp Channel - 2 kolom */
-        .social-item.wa-channel {
-            grid-column: span 2;
-            flex-direction: row;
-            gap: 10px;
-            padding: 12px 10px;
-        }
-
-        .social-item.wa-channel i {
-            font-size: 20px;
-        }
-
-        .social-item.wa-channel span {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
         /* Footer */
         .footer {
             font-size: 12px;
-            color: #555;
-            border-top: 1px solid #222;
+            color: #777;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             padding-top: 20px;
             letter-spacing: 0.2px;
         }
 
         .footer a {
-            color: #777;
+            color: #999;
             text-decoration: none;
             font-weight: 500;
         }
 
         .footer a:hover {
-            color: #999;
+            color: #bbb;
             text-decoration: underline;
         }
 
@@ -219,11 +282,16 @@
                 width: 72px;
                 height: 72px;
             }
-            .avatar {
-                font-size: 30px;
-            }
             .name {
                 font-size: 22px;
+            }
+            .verified-badge {
+                width: 18px;
+                height: 18px;
+                font-size: 11px;
+            }
+            .verified-badge i {
+                font-size: 9px;
             }
             .social-item {
                 padding: 12px 2px;
@@ -243,23 +311,32 @@
             .social-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            .social-item.wa-channel {
-                grid-column: span 2;
-            }
         }
     </style>
 </head>
 <body>
 
+    <!-- ===== PILIH BACKGROUND DI BAWAH INI ===== -->
+
+    <!-- OPSI 1: Background VIDEO (gunakan salah satu) -->
+    <!-- <video class="bg-video" autoplay muted loop playsinline>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+    </video> -->
+
+    <!-- OPSI 2: Background GAMBAR -->
+    <div class="bg-image" style="background-image: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80');"></div>
+
+    <!-- Overlay gelap -->
+    <div class="overlay"></div>
+
     <div class="container">
 
-        <!-- Avatar - ganti src dengan gambar Anda -->
-        <a href="https://github.com" class="avatar-link" target="_blank">
+        <!-- Avatar -->
+        <a href="#" class="avatar-link" target="_blank">
             <img src="https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/20250829_150334.jpg" alt="Rizz.yeyo" class="avatar" />
         </a>
-        </a>
 
-        <!-- Nama dengan Verified Badge -->
+        <!-- Nama -->
         <div class="name-wrapper">
             <span class="name">Rizz.yeyo</span>
             <span class="verified-badge">
@@ -281,38 +358,32 @@
         <!-- Grid Sosial Media -->
         <div class="social-grid">
 
-            <!-- Github -->
             <a href="https://github.com" class="social-item" target="_blank">
                 <i class="fab fa-github"></i>
                 <span>Github</span>
             </a>
 
-            <!-- Facebook -->
             <a href="https://facebook.com" class="social-item" target="_blank">
                 <i class="fab fa-facebook"></i>
                 <span>Facebook</span>
             </a>
 
-            <!-- YouTube -->
             <a href="https://youtube.com" class="social-item" target="_blank">
                 <i class="fab fa-youtube"></i>
                 <span>YouTube</span>
             </a>
 
-            <!-- WhatsApp -->
             <a href="https://wa.me/6283119846840" class="social-item" target="_blank">
                 <i class="fab fa-whatsapp"></i>
                 <span>WhatsApp</span>
             </a>
 
-            <!-- WhatsApp Channel -->
-            <a href="https://whatsapp.com/channel/" class="social-item wa-channel" target="_blank">
+            <a href="https://whatsapp.com/channel/" class="social-item" target="_blank">
                 <i class="fab fa-whatsapp"></i>
                 <span>WhatsApp Channel</span>
             </a>
 
-            <!-- Telegram -->
-            <a href="https:rizz.yeyo/" class="social-item" target="_blank">
+            <a href="https://instagram.com/rizz.yeyo" class="social-item" target="_blank">
                 <i class="fab fa-instagram"></i>
                 <span>Instagram</span>
             </a>
