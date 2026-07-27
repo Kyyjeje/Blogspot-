@@ -90,61 +90,126 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== BACKGROUND ===== */
-        .bg-image {
+        /* ===== BACKGROUND VIDEO ===== */
+        .bg-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            object-fit: cover;
             z-index: 0;
         }
 
+        /* Overlay transparan tipis agar teks tetap terbaca */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.4);
             z-index: 1;
         }
 
+        /* ===== CARD PROFIL (TANPA KOTAK BACKGROUND) ===== */
         .container {
-            background: #141414;
             max-width: 400px;
             width: 100%;
             padding: 32px 24px 28px;
             border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.08);
             position: relative;
             z-index: 2;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            background: rgba(20, 20, 20, 0.85);
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            border: none;
+            box-shadow: none;
         }
 
-        /* Avatar */
+        /* ===== AVATAR DENGAN BINGKAI BIRU TIPIS BERPUTAR ===== */
+        .avatar-wrapper {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 14px;
+        }
+
+        /* Lingkaran berputar (bingkai biru tipis) */
+        .avatar-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #1d9bf0,
+                #00d4ff,
+                #1d9bf0,
+                #00d4ff,
+                #1d9bf0
+            );
+            animation: spinBorder 3s linear infinite;
+            z-index: 0;
+            opacity: 0.7;
+        }
+
+        /* Efek glow biru tipis di belakang */
+        .avatar-wrapper::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(29, 155, 240, 0.15), transparent 70%);
+            filter: blur(10px);
+            z-index: -1;
+            animation: glowPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes spinBorder {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
         .avatar-link {
             display: block;
             width: 88px;
             height: 88px;
-            margin: 0 auto 14px;
             border-radius: 50%;
             text-decoration: none;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
             overflow: hidden;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 1;
+            margin: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
         }
 
         .avatar-link:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
         }
 
         .avatar {
@@ -154,7 +219,7 @@
             display: block;
         }
 
-        /* Nama */
+        /* Nama dengan efek glow */
         .name-wrapper {
             display: flex;
             align-items: center;
@@ -168,6 +233,7 @@
             font-weight: 700;
             color: #ffffff;
             letter-spacing: -0.3px;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 0, 0, 0.5);
         }
 
         .verified-badge {
@@ -196,16 +262,18 @@
             100% { box-shadow: 0 0 15px rgba(29, 155, 240, 0.5); }
         }
 
-        /* Badge */
+        /* Badge dengan latar transparan */
         .badge {
             display: inline-block;
-            background: rgba(31, 31, 31, 0.8);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             padding: 4px 16px;
             border-radius: 30px;
             font-size: 12px;
             font-weight: 500;
-            color: #aaa;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #eee;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             margin: 4px 0 10px;
             letter-spacing: 0.2px;
         }
@@ -213,7 +281,7 @@
         /* ===== TYPING EFFECT ===== */
         .bio-wrapper {
             font-size: 14px;
-            color: #ccc;
+            color: #fff;
             margin-bottom: 24px;
             line-height: 1.5;
             padding: 0 4px;
@@ -221,6 +289,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
         }
 
         #typing-text {
@@ -235,26 +304,26 @@
             50% { border-color: transparent; }
         }
 
-        /* Tombol Donasi */
+        /* Tombol Donasi dengan latar transparan */
         .donate-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            background: rgba(30, 30, 30, 0.8);
-            color: #eee;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
             padding: 12px 28px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
             font-size: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             transition: all 0.2s;
             margin-bottom: 28px;
             width: 100%;
             max-width: 220px;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
         }
 
         .donate-btn i {
@@ -263,12 +332,12 @@
         }
 
         .donate-btn:hover {
-            background: rgba(38, 38, 38, 0.9);
-            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
 
-        /* Grid Sosial */
+        /* Grid Sosial dengan latar transparan */
         .social-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -277,10 +346,12 @@
         }
 
         .social-item {
-            background: rgba(26, 26, 26, 0.8);
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             padding: 14px 4px;
             border-radius: 18px;
-            color: #bbb;
+            color: #eee;
             text-decoration: none;
             font-size: 12px;
             font-weight: 500;
@@ -288,26 +359,24 @@
             flex-direction: column;
             align-items: center;
             gap: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.15s;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
         }
 
         .social-item i {
             font-size: 22px;
-            color: #ccc;
+            color: #fff;
         }
 
         .social-item span {
             font-size: 10px;
-            opacity: 0.7;
+            opacity: 0.8;
             letter-spacing: 0.2px;
         }
 
         .social-item:hover {
-            background: rgba(34, 34, 34, 0.9);
-            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
         }
 
@@ -318,21 +387,60 @@
         /* Footer */
         .footer {
             font-size: 12px;
-            color: #777;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             padding-top: 20px;
             letter-spacing: 0.2px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
         }
 
         .footer a {
-            color: #999;
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             font-weight: 500;
         }
 
         .footer a:hover {
-            color: #bbb;
+            color: #fff;
             text-decoration: underline;
+        }
+
+        /* ===== INDICATOR SUARA ===== */
+        .sound-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .sound-indicator .sound-icon {
+            color: #4fc3f7;
+            font-size: 18px;
+            animation: soundPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes soundPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        .sound-indicator .sound-label {
+            color: #aaa;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         /* Responsif */
@@ -340,6 +448,10 @@
             .container {
                 padding: 24px 16px 20px;
                 border-radius: 24px;
+            }
+            .avatar-wrapper {
+                width: 80px;
+                height: 80px;
             }
             .avatar-link {
                 width: 72px;
@@ -378,6 +490,15 @@
             .welcome-content p {
                 font-size: 0.95rem;
             }
+            .sound-indicator {
+                bottom: 16px;
+                right: 16px;
+                padding: 8px 14px;
+                gap: 8px;
+            }
+            .sound-indicator .sound-label {
+                font-size: 10px;
+            }
         }
 
         @media (max-width: 360px) {
@@ -398,16 +519,29 @@
         </div>
     </div>
 
-    <!-- Background -->
-    <div class="bg-image" style="background-image: url('https://c.termai.cc/v102/jEIc.mp4');"></div>
+    <!-- ===== BACKGROUND VIDEO DENGAN SUARA ===== -->
+    <!-- 
+        GANTI LINK VIDEO DI BAWAH INI
+        ⚠️ HAPUS ATTRIBUTE "muted" AGAR SUARA TETAP MENYALA
+    -->
+    <video class="bg-video" autoplay loop playsinline>
+        <source src="https://c.termai.cc/v102/jEIc.mp4" type="video/mp4" />
+        <!-- Tambahkan source lain jika perlu -->
+        <!-- <source src="https://example.com/video.webm" type="video/webm" /> -->
+        <!-- <source src="https://example.com/video.ogg" type="video/ogg" /> -->
+    </video>
+    
+    <!-- Overlay tipis agar teks tetap terbaca -->
     <div class="overlay"></div>
 
     <div class="container">
 
-        <!-- Avatar -->
-        <a href="#" class="avatar-link" target="_blank">
-            <img src="https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg" alt="Rizz.yeyo" class="avatar" />
-        </a>
+        <!-- ===== AVATAR DENGAN BINGKAI BIRU TIPIS BERPUTAR ===== -->
+        <div class="avatar-wrapper">
+            <a href="#" class="avatar-link" target="_blank">
+                <img src="https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg" alt="Rizz.yeyo" class="avatar" />
+            </a>
+        </div>
 
         <!-- Nama -->
         <div class="name-wrapper">
@@ -472,6 +606,12 @@
 
     </div>
 
+    <!-- ===== INDICATOR SUARA ===== -->
+    <div class="sound-indicator">
+        <i class="fas fa-volume-up sound-icon"></i>
+        <span class="sound-label">🔊 Suara menyala</span>
+    </div>
+
     <!-- ===== JAVASCRIPT TYPING EFFECT + OVERLAY ===== -->
     <script>
         // ---- Typing Effect ----
@@ -521,7 +661,15 @@
                 typeEffect();
             }
         }, 5000);
-    </script>
 
-</body>
-    </html>
+        // ---- Jalankan Video dengan Suara ----
+        // Coba putar video dengan suara setelah overlay hilang
+        setTimeout(() => {
+            const video = document.querySelector('.bg-video');
+            if (video) {
+                video.play().catch(err => {
+                    console.log('Autoplay dengan suara diblokir. Klik di halaman untuk memutar.');
+                    // Jika diblokir, putar saat user klik
+                    document.addEventListener('click', function playVideo() {
+                        video.play().catch(() => {});
+ 
