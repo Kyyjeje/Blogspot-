@@ -6,6 +6,7 @@
     <title>Rizz.yeyo Official</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
+        /* Reset & Base */
         * {
             margin: 0;
             padding: 0;
@@ -21,6 +22,72 @@
             padding: 16px;
             position: relative;
             overflow: hidden;
+        }
+
+        /* ===== OVERLAY HITAM (SELAMAT DATANG) ===== */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .welcome-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .welcome-content {
+            text-align: center;
+            color: #fff;
+            padding: 24px;
+            animation: fadeUp 1s ease;
+        }
+
+        .welcome-content h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f5a623, #f7c948);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-content p {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .welcome-content .loader {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #f5a623;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* ===== BACKGROUND ===== */
@@ -124,15 +191,9 @@
         }
 
         @keyframes pulse {
-            0% {
-                box-shadow: 0 0 15px rgba(29, 155, 240, 0.5);
-            }
-            50% {
-                box-shadow: 0 0 25px rgba(29, 155, 240, 0.8), 0 0 50px rgba(29, 155, 240, 0.2);
-            }
-            100% {
-                box-shadow: 0 0 15px rgba(29, 155, 240, 0.5);
-            }
+            0% { box-shadow: 0 0 15px rgba(29, 155, 240, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(29, 155, 240, 0.8), 0 0 50px rgba(29, 155, 240, 0.2); }
+            100% { box-shadow: 0 0 15px rgba(29, 155, 240, 0.5); }
         }
 
         /* Badge */
@@ -170,12 +231,8 @@
         }
 
         @keyframes blink {
-            0%, 100% {
-                border-color: #1d9bf0;
-            }
-            50% {
-                border-color: transparent;
-            }
+            0%, 100% { border-color: #1d9bf0; }
+            50% { border-color: transparent; }
         }
 
         /* Tombol Donasi */
@@ -315,6 +372,12 @@
                 font-size: 13px;
                 min-height: 20px;
             }
+            .welcome-content h1 {
+                font-size: 1.8rem;
+            }
+            .welcome-content p {
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 360px) {
@@ -325,6 +388,15 @@
     </style>
 </head>
 <body>
+
+    <!-- ===== OVERLAY HITAM SELAMAT DATANG ===== -->
+    <div id="welcomeOverlay" class="welcome-overlay">
+        <div class="welcome-content">
+            <h1>👋 Selamat Datang</h1>
+            <p>di My Profil Rizz.yeyo Official</p>
+            <div class="loader"></div>
+        </div>
+    </div>
 
     <!-- Background -->
     <div class="bg-image" style="background-image: url('https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg');"></div>
@@ -400,8 +472,9 @@
 
     </div>
 
-    <!-- ===== JAVASCRIPT TYPING EFFECT ===== -->
+    <!-- ===== JAVASCRIPT TYPING EFFECT + OVERLAY ===== -->
     <script>
+        // ---- Typing Effect ----
         const text = "Developer Website IT engineering - 26 Januari 2005/Teknik Kendaraan Ringan Otomotif/-SMKN 1 GERIH";
         const typingElement = document.getElementById('typing-text');
         let index = 0;
@@ -409,35 +482,46 @@
 
         function typeEffect() {
             if (!isDeleting) {
-                // Mengetik
                 if (index < text.length) {
                     typingElement.textContent = text.substring(0, index + 1);
                     index++;
-                    setTimeout(typeEffect, 50); // Kecepatan mengetik
+                    setTimeout(typeEffect, 50);
                 } else {
-                    // Selesai mengetik, tunggu sebentar lalu hapus
                     isDeleting = true;
-                    setTimeout(typeEffect, 3000); // Tunggu 3 detik sebelum menghapus
+                    setTimeout(typeEffect, 3000);
                 }
             } else {
-                // Menghapus
                 if (index > 0) {
                     typingElement.textContent = text.substring(0, index - 1);
                     index--;
-                    setTimeout(typeEffect, 30); // Kecepatan menghapus
+                    setTimeout(typeEffect, 30);
                 } else {
-                    // Selesai menghapus, mulai mengetik lagi
                     isDeleting = false;
                     setTimeout(typeEffect, 500);
                 }
             }
         }
 
-        // Mulai efek setelah halaman dimuat
-        window.onload = function() {
-            setTimeout(typeEffect, 1000); // Tunggu 1 detik sebelum mulai
-        };
+        // ---- Overlay Hitam (Selamat Datang) ----
+        const overlay = document.getElementById('welcomeOverlay');
+
+        // Sembunyikan overlay setelah 3 detik
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+        }, 3000);
+
+        // Mulai efek typing setelah overlay hilang (3,5 detik)
+        setTimeout(() => {
+            typeEffect();
+        }, 3500);
+
+        // Backup: jika efek typing belum jalan, jalankan setelah 5 detik
+        setTimeout(() => {
+            if (typingElement.textContent === '') {
+                typeEffect();
+            }
+        }, 5000);
     </script>
 
 </body>
-</html>
+    </html>
