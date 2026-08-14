@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rizz.yeyo Official</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== JAM & TANGGAL REAL-TIME DI POJOK KANAN ATAS ===== */
+        .datetime-widget {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            min-width: 110px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            user-select: none;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .datetime-widget .time {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #4fc3f7, #1d9bf0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .datetime-widget .date {
+            font-size: 11px;
+            color: #aaa;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .datetime-widget .date i {
+            margin-right: 4px;
+            font-size: 10px;
+            color: #f5a623;
+        }
+
+        /* ===== NOTIFIKASI / IKLAN BAR ATAS ===== */
+        .notification-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            transform: translateY(-100%);
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            border-bottom: 2px solid rgba(29, 155, 240, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .notification-bar.show {
+            transform: translateY(0);
+        }
+
+        .notification-bar .notif-icon {
+            font-size: 20px;
+            color: #f5a623;
+            animation: bellRing 0.5s ease 3;
+            flex-shrink: 0;
+        }
+
+        @keyframes bellRing {
+            0%, 100% { transform: rotate(0); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+
+        .notification-bar .notif-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .notification-bar .notif-label {
+            background: #1d9bf0;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .notification-bar .notif-text {
+            color: #eee;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .notification-bar .notif-text strong {
+            color: #f5a623;
+        }
+
+        .notification-bar .notif-close {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s;
+            flex-shrink: 0;
+            margin-left: 4px;
+        }
+
+        .notification-bar .notif-close:hover {
+            color: #fff;
+        }
+
+        /* Progress bar untuk timer notifikasi */
+        .notification-bar .notif-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1d9bf0, #f5a623);
+            width: 100%;
+            border-radius: 0 0 4px 4px;
+            transition: width 0.1s linear;
+        }
+
+        /* ===== OVERLAY HITAM (SELAMAT DATANG) ===== */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            transition: opacity 1.2s ease, visibility 1.2s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .welcome-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .welcome-content {
+            text-align: center;
+            color: #fff;
+            padding: 24px;
+            animation: fadeUp 1s ease;
+        }
+
+        .welcome-content h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f5a623, #f7c948);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-content p {
+            font-size: 1.1rem;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .welcome-content .loader {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 20px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #f5a623;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* ===== TOMBOL LANJUTKAN ===== */
+        .btn-lanjutkan {
+            display: inline-block;
+            padding: 12px 40px;
+            background: linear-gradient(135deg, #1d9bf0, #0d7ecf);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(29, 155, 240, 0.3);
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+
+        .btn-lanjutkan:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(29, 155, 240, 0.5);
+        }
+
+        .btn-lanjutkan:active {
+            transform: scale(0.95);
+        }
+
+        /* ===== INDICATOR MUSIK DENGAN ANIMASI JALAN KE KIRI ===== */
+        .music-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            user-select: none;
+            overflow: hidden;
+            max-width: 200px;
+        }
+
+        .music-indicator.show {
+            display: flex;
+        }
+
+        .music-indicator .music-icon {
+            color: #4fc3f7;
+            font-size: 18px;
+            animation: soundPulse 1.5s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes soundPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        /* ===== WRAPPER UNTUK ANIMASI JALAN KE KIRI ===== */
+        .music-text-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            flex: 1;
+            position: relative;
+        }
+
+        .music-text-scroll {
+            display: inline-block;
+            animation: scrollLeft 8s linear infinite;
+            color: #aaa;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes scrollLeft {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Efek fade di ujung kiri dan kanan */
+        .music-text-wrapper::before,
+        .music-text-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 20px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .music-text-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.6), transparent);
+        }
+
+        .music-text-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(0, 0, 0, 0.6), transparent);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== BACKGROUND ===== */
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+
+        /* ===== PARTIKEL CANVAS ===== */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container {
+            background: #141414;
+            max-width: 400px;
+            width: 100%;
+            padding: 32px 24px 28px;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: rgba(20, 20, 20, 0.85);
+        }
+
+        /* ===== AVATAR DENGAN EFEK CAHAYA BERPUTAR ===== */
+        .avatar-wrapper {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 14px;
+        }
+
+        /* Lingkaran cahaya berputar di belakang avatar */
+        .avatar-glow-ring {
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            width: 108px;
+            height: 108px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                transparent,
+                #1d9bf0,
+                #f5a623,
+                #ff6b6b,
+                #a855f7,
+                #1d9bf0,
+                transparent
+            );
+            animation: spinGlow 3s linear infinite;
+            filter: blur(2px);
+            opacity: 0.7;
+            z-index: 0;
+        }
+
+        /* Lingkaran cahaya kedua dengan efek berbeda */
+        .avatar-glow-ring-2 {
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 102px;
+            height: 102px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 90deg,
+                transparent,
+                #4fc3f7,
+                #ffd54f,
+                #ef5350,
+                #7c4dff,
+                #4fc3f7,
+                transparent
+            );
+            animation: spinGlow 4s linear infinite reverse;
+            filter: blur(4px);
+            opacity: 0.4;
+            z-index: 0;
+        }
+
+        @keyframes spinGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .avatar-link {
+            display: block;
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 1;
+            margin: 4px;
+        }
+
+        .avatar-link:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Nama */
+        .name-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 2px;
+        }
+
+        .name {
+            font-size: 26px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #1d9bf0;
+            color: #fff;
+            font-size: 14px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(29, 155, 240, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .verified-badge i {
+            font-size: 11px;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px rgba(29, 155, 240, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(29, 155, 240, 0.8), 0 0 50px rgba(29, 155, 240, 0.2); }
+            100% { box-shadow: 0 0 15px rgba(29, 155, 240, 0.5); }
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: rgba(31, 31, 31, 0.8);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin: 4px 0 10px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ===== TYPING EFFECT ===== */
+        .bio-wrapper {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            padding: 0 4px;
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #typing-text {
+            display: inline;
+            border-right: 2px solid #1d9bf0;
+            padding-right: 4px;
+            animation: blink 0.8s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: #1d9bf0; }
+            50% { border-color: transparent; }
+        }
+
+        /* Tombol Donasi */
+        .donate-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(30, 30, 30, 0.8);
+            color: #eee;
+            padding: 12px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s;
+            margin-bottom: 28px;
+            width: 100%;
+            max-width: 220px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .donate-btn i {
+            font-size: 16px;
+            color: #f5a623;
+        }
+
+        .donate-btn:hover {
+            background: rgba(38, 38, 38, 0.9);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Grid Sosial */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        .social-item {
+            background: rgba(26, 26, 26, 0.8);
+            padding: 14px 4px;
+            border-radius: 18px;
+            color: #bbb;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.15s;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .social-item i {
+            font-size: 22px;
+            color: #ccc;
+        }
+
+        .social-item span {
+            font-size: 10px;
+            opacity: 0.7;
+            letter-spacing: 0.2px;
+        }
+
+        .social-item:hover {
+            background: rgba(34, 34, 34, 0.9);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-3px);
+        }
+
+        .social-item:hover i {
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 20px;
+            letter-spacing: 0.2px;
+        }
+
+        .footer a {
+            color: #999;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: #bbb;
+            text-decoration: underline;
+        }
+
+        /* Responsif */
+        @media (max-width: 420px) {
+            .container {
+                padding: 24px 16px 20px;
+                border-radius: 24px;
+            }
+            .avatar-wrapper {
+                width: 80px;
+                height: 80px;
+            }
+            .avatar-glow-ring {
+                width: 92px;
+                height: 92px;
+                top: -6px;
+                left: -6px;
+            }
+            .avatar-glow-ring-2 {
+                width: 86px;
+                height: 86px;
+                top: -3px;
+                left: -3px;
+            }
+            .avatar-link {
+                width: 72px;
+                height: 72px;
+                margin: 4px;
+            }
+            .name {
+                font-size: 22px;
+            }
+            .verified-badge {
+                width: 18px;
+                height: 18px;
+                font-size: 11px;
+            }
+            .verified-badge i {
+                font-size: 9px;
+            }
+            .social-item {
+                padding: 12px 2px;
+                border-radius: 14px;
+            }
+            .social-item i {
+                font-size: 18px;
+            }
+            .donate-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+                max-width: 180px;
+            }
+            .bio-wrapper {
+                font-size: 13px;
+                min-height: 20px;
+            }
+            .welcome-content h1 {
+                font-size: 1.8rem;
+            }
+            .welcome-content p {
+                font-size: 0.95rem;
+            }
+            .btn-lanjutkan {
+                padding: 10px 30px;
+                font-size: 14px;
+            }
+            .music-indicator {
+                max-width: 160px;
+                padding: 8px 14px;
+                bottom: 16px;
+                right: 16px;
+            }
+            .music-indicator .music-icon {
+                font-size: 15px;
+            }
+            .music-text-scroll {
+                font-size: 10px;
+            }
+            .notification-bar .notif-text {
+                font-size: 11px;
+            }
+            .notification-bar {
+                padding: 10px 14px;
+                gap: 8px;
+            }
+            .notification-bar .notif-icon {
+                font-size: 16px;
+            }
+            .datetime-widget {
+                top: 12px;
+                right: 12px;
+                padding: 8px 12px;
+                min-width: 80px;
+            }
+            .datetime-widget .time {
+                font-size: 17px;
+            }
+            .datetime-widget .date {
+                font-size: 9px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .social-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .music-indicator {
+                max-width: 140px;
+            }
+            .notification-bar .notif-text {
+                font-size: 10px;
+            }
+            .datetime-widget .time {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== JAM & TANGGAL REAL-TIME ===== -->
+    <div class="datetime-widget" id="datetimeWidget">
+        <div class="time" id="clockTime">00:00:00</div>
+        <div class="date" id="clockDate"><i class="fas fa-calendar-alt"></i> 00 Januari 0000</div>
+    </div>
+
+    <!-- ===== NOTIFIKASI / IKLAN BAR ATAS ===== -->
+    <div id="notificationBar" class="notification-bar">
+        <i class="fas fa-bell notif-icon"></i>
+        <div class="notif-content">
+            <span class="notif-label">Promo</span>
+            <span class="notif-text">
+                <strong>🎉 SPESIAL HARI INI!</strong> Donasi Kemanusiaan & Korban Bencana
+            </span>
+        </div>
+        <i class="fas fa-times notif-close" id="notifClose"></i>
+        <div class="notif-progress" id="notifProgress"></div>
+    </div>
+
+    <!-- ===== OVERLAY HITAM SELAMAT DATANG ===== -->
+    <div id="welcomeOverlay" class="welcome-overlay">
+        <div class="welcome-content">
+            <h1> Selamat Datang</h1>
+            <p>di Profil Rizz.yeyo </p>
+            <div class="loader"></div>
+            <!-- ===== TOMBOL LANJUTKAN ===== -->
+            <button class="btn-lanjutkan" id="btnLanjutkan">
+                <i class="fas fa-play" style="margin-right: 8px;"></i> Lanjutkan
+            </button>
+        </div>
+    </div>
+
+    <!-- Background -->
+    <div class="bg-image" style="background-image: url('https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg');"></div>
+    <div class="overlay"></div>
+    
+    <!-- ===== CANVAS PARTIKEL ===== -->
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="container">
+
+        <!-- ===== AVATAR DENGAN EFEK CAHAYA BERPUTAR ===== -->
+        <div class="avatar-wrapper">
+            <!-- Dua lapisan cahaya berputar -->
+            <div class="avatar-glow-ring"></div>
+            <div class="avatar-glow-ring-2"></div>
+            <!-- Avatar -->
+            <a href="#" class="avatar-link" target="_blank">
+                <img src="https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg" alt="Rizz.yeyo" class="avatar" />
+            </a>
+        </div>
+
+        <!-- Nama -->
+        <div class="name-wrapper">
+            <span class="name">RISKY DWI NUGROHO</span>
+            <span class="verified-badge">
+                <i class="fas fa-check"></i>
+            </span>
+        </div>
+
+        <!-- Badge -->
+        <div class="badge">IT Engineering | Developer Website</div>
+
+        <!-- Bio dengan Typing Effect -->
+        <div class="bio-wrapper">
+            <span id="typing-text"></span>
+        </div>
+
+        <!-- Tombol Donasi -->
+        <a href="https://kitabisa.com/" class="donate-btn" target="_blank">
+            <i class="fas fa-donate"></i> Donasi Kemanusiaan & Korban Bencana 
+        </a>
+
+        <!-- Grid Sosial Media -->
+        <div class="social-grid">
+
+            <a href="https://github.com/Kyyjeje" class="social-item" target="_blank">
+                <i class="fab fa-github"></i>
+                <span>Github</span>
+            </a>
+
+            <a href="https://www.facebook.com/KyyEveryday" class="social-item" target="_blank">
+                <i class="fab fa-facebook"></i>
+                <span>Facebook</span>
+            </a>
+
+            <a href="https://youtube.com/@kyyeveryday" class="social-item" target="_blank">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+
+            <a href="https://wa.me/6283119847840" class="social-item" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+
+            <a href="https://x.com/Risky_DN26" class="social-item" target="_blank">
+                <i class="fab fa-x-twitter"></i>
+                <span>X-twitter</span>
+            </a>
+
+            <a href="https://instagram.com/rizz.yeyo" class="social-item" target="_blank">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            contacts Person<a href="https://mail.google.com" target="_blank">riskydwin26@gmail.com</a>
+        </div>
+
+    </div>
+
+    <!-- ===== INDICATOR MUSIK DENGAN ANIMASI JALAN KE KIRI ===== -->
+    <div class="music-indicator" id="musicIndicator">
+        <i class="fas fa-music music-icon"></i>
+        <div class="music-text-wrapper">
+            <span class="music-text-scroll">🎵 CLBK • Bayu G2B Feat Latasya </span>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ======================================================
+        // 1. JAM & TANGGAL REAL-TIME
+        // ======================================================
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Format Jam (HH:MM:SS)
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clockTime').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Format Tanggal
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                           'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            
+            const dayName = days[now.getDay()];
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            document.getElementById('clockDate').innerHTML = 
+                `<i class="fas fa-calendar-alt"></i> ${dayName}, ${day} ${month} ${year}`;
+        }
+
+        // Update setiap detik
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+
+        // ======================================================
+        // 2. NOTIFIKASI / IKLAN BAR
+        // ======================================================
+        const notificationBar = document.getElementById('notificationBar');
+        const notifClose = document.getElementById('notifClose');
+        const notifProgress = document.getElementById('notifProgress');
+        let notifTimeout = null;
+        let progressInterval = null;
+        const NOTIF_DURATION = 5000; // 5 detik
+
+        function showNotification() {
+            notificationBar.classList.add('show');
+            // Reset progress
+            notifProgress.style.width = '100%';
+            
+            // Animasi progress bar
+            let startTime = Date.now();
+            progressInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, 1 - (elapsed / NOTIF_DURATION));
+                notifProgress.style.width = (remaining * 100) + '%';
+            }, 50);
+
+            // Auto hide setelah durasi
+            notifTimeout = setTimeout(() => {
+                hideNotification();
+            }, NOTIF_DURATION);
+        }
+
+        function hideNotification() {
+            notificationBar.classList.remove('show');
+            clearTimeout(notifTimeout);
+            clearInterval(progressInterval);
+            notifProgress.style.width = '0%';
+        }
+
+        // Tombol close manual
+        notifClose.addEventListener('click', function(e) {
+            e.stopPropagation();
+            hideNotification();
+        });
+
+        // Klik pada bar untuk membuka link (opsional)
+        notificationBar.addEventListener('click', function(e) {
+            if (e.target === notifClose || e.target.closest('.notif-close')) return;
+            // Bisa diarahkan ke link tertentu
+            window.open('https://kitabisa.com/', '_blank');
+            hideNotification();
+        });
+
+        // ======================================================
+        // 3. GANTI LINK MUSIK DI SINI
+        // ======================================================
+        const MUSIC_URL = 'https://www.image2url.com/r2/default/audio/1785942713563-d6ff18da-a46b-46fe-b5cd-85753234c6ca.mp3';
+        // Ganti dengan link musik favorit Anda:
+        // - File lokal: 'musik-saya.mp3'
+        // - Link MP3: 'https://example.com/lagu.mp3'
+
+        // ======================================================
+        // 4. TYPING TEXT - SESUAIKAN DENGAN KEINGINAN
+        // ======================================================
+        const TYPING_TEXT = "Developer Website IT engineering - 26 Januari 2005/Teknik Kendaraan Ringan Otomotif/-SMKN 1 GERIH NGAWI";
+
+        // ======================================================
+        // 5. IMPLEMENTASI
+        // ======================================================
+
+        // ---- MUSIC PLAYER ----
+        const audio = new Audio(MUSIC_URL);
+        audio.loop = true;
+        audio.volume = 1.0;
+
+        let isMusicPlaying = false;
+        const btnLanjutkan = document.getElementById('btnLanjutkan');
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const musicIndicator = document.getElementById('musicIndicator');
+
+        // Fungsi untuk memutar musik
+        function playMusic() {
+            if (!isMusicPlaying) {
+                audio.play().then(() => {
+                    isMusicPlaying = true;
+                    btnLanjutkan.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i> Musik Diputar';
+                    btnLanjutkan.style.background = 'linear-gradient(135deg, #00c853, #00a844)';
+                    btnLanjutkan.style.boxShadow = '0 0 30px rgba(0, 200, 83, 0.3)';
+                    musicIndicator.classList.add('show');
+                }).catch(err => {
+                    console.log('Gagal memutar musik:', err);
+                    alert('Klik tombol lagi untuk memutar musik!');
+                });
+            }
+        }
+
+        // Event klik tombol Lanjutkan
+        btnLanjutkan.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Putar musik
+            playMusic();
+            
+            // Sembunyikan overlay
+            welcomeOverlay.classList.add('hidden');
+            
+            // Tampilkan notifikasi setelah overlay hilang
+            setTimeout(() => {
+                showNotification();
+            }, 800);
+            
+            // Mulai efek typing setelah overlay hilang
+            setTimeout(() => {
+                typeEffect();
+            }, 500);
+        });
+
+        // ---- TYPING EFFECT ----
+        const typingElement = document.getElementById('typing-text');
+        let index = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            if (!isDeleting) {
+                if (index < TYPING_TEXT.length) {
+                    typingElement.textContent = TYPING_TEXT.substring(0, index + 1);
+                    index++;
+                    setTimeout(typeEffect, 50);
+                } else {
+                    isDeleting = true;
+                    setTimeout(typeEffect, 3000);
+                }
+            } else {
+                if (index > 0) {
+                    typingElement.textContent = TYPING_TEXT.substring(0, index - 1);
+                    index--;
+                    setTimeout(typeEffect, 30);
+                } else {
+                    isDeleting = false;
+                    setTimeout(typeEffect, 500);
+                }
+            }
+        }
+
+        // Backup: jika typing belum jalan setelah 10 detik (misal user tidak klik)
+        setTimeout(() => {
+            if (typingElement.textContent === '' && welcomeOverlay.classList.contains('hidden')) {
+                typeEffect();
+            }
+        }, 10000);
+
+        // ======================================================
+        // 6. EFFECT PARTIKEL DENGAN CANVAS
+        // ======================================================
+        (function initParticles() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const PARTICLE_COUNT = 80;
+            const MAX_SPEED = 0.6;
+            const CONNECT_DIST = 120;
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+
+            window.addEventListener('resize', resize);
+            resize();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * MAX_SPEED * 2;
+                    this.vy = (Math.random() - 0.5) * MAX_SPEED * 2;
+                    this.radius = Math.random() * 2.5 + 1.5;
+                    this.opacity = Math.random() * 0.5 + 0.3;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            function drawLines() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < CONNECT_DIST) {
+                            const opacity = (1 - dist / CONNECT_DIST) * 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(200, 200, 255, ${opacity})`;
+                            ctx.lineWidth = 0.7;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                for (let p of particles) {
+                    p.update();
+                    p.draw();
+                }
+                drawLines();
+                requestAnimationFrame(animate);
+            }
+
+            animate();
+        })();
+    </script>
+
+</body>
+</html>
