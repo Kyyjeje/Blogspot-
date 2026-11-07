@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0a0a0f" />
+    <title>Rizz.yeyo — Liquid Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* ============================================================
+           RESET & BASE
+        ============================================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-deep: #05060a;
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-highlight: rgba(255, 255, 255, 0.22);
+            --accent-1: #4fc3f7;
+            --accent-2: #1d9bf0;
+            --accent-3: #a855f7;
+            --accent-4: #f5a623;
+            --text-main: #ffffff;
+            --text-sub: #b8bcc8;
+            --text-muted: #7a7f8c;
+            --radius-lg: 32px;
+            --radius-md: 20px;
+            --radius-sm: 14px;
+            --transition: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-deep);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-main);
+        }
+
+        /* ============================================================
+           BACKGROUND LIQUID
+        ============================================================ */
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+            filter: blur(2px) brightness(0.55) saturate(1.2);
+            transform: scale(1.05);
+        }
+
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(79, 195, 247, 0.14), transparent 45%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.14), transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.35), rgba(5, 6, 10, 0.9));
+            z-index: 1;
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+
+        .liquid-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: 0.45;
+            z-index: 1;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            animation: blobFloat 18s ease-in-out infinite alternate;
+        }
+        .blob-1 {
+            width: 380px; height: 380px;
+            background: radial-gradient(circle, #1d9bf0, transparent 70%);
+            top: -100px; left: -100px;
+            animation-duration: 20s;
+        }
+        .blob-2 {
+            width: 340px; height: 340px;
+            background: radial-gradient(circle, #a855f7, transparent 70%);
+            bottom: -90px; right: -90px;
+            animation-duration: 26s;
+            animation-delay: -6s;
+        }
+        .blob-3 {
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, #f5a623, transparent 70%);
+            top: 50%; left: 60%;
+            animation-duration: 22s;
+            animation-delay: -12s;
+            opacity: 0.28;
+        }
+
+        @keyframes blobFloat {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(40px, -30px) scale(1.15); }
+            100% { transform: translate(-30px, 30px) scale(0.95); }
+        }
+
+        /* ============================================================
+           PARTIKEL
+        ============================================================ */
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           JAM & TANGGAL
+        ============================================================ */
+        .datetime-widget {
+            position: fixed;
+            top: 18px;
+            right: 18px;
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(22px) saturate(180%);
+            -webkit-backdrop-filter: blur(22px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 10px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+            min-width: 116px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.45),
+                inset 0 1px 1px var(--glass-highlight);
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .datetime-widget::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 40%, transparent 60%, rgba(255,255,255,0.1));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .datetime-widget .time {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #4fc3f7, #1d9bf0, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .datetime-widget .date {
+            font-size: 10.5px;
+            color: var(--text-sub);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .datetime-widget .date i {
+            margin-right: 4px;
+            font-size: 9.5px;
+            color: var(--accent-4);
+        }
+
+        /* ============================================================
+           NOTIFIKASI BAR
+        ============================================================ */
+        .notification-bar {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -130%);
+            z-index: 9999;
+            width: min(94%, 560px);
+            transition: transform 0.7s var(--transition);
+            padding: 13px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.92), rgba(22, 33, 62, 0.88), rgba(15, 52, 96, 0.82));
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-top: none;
+            border-radius: 0 0 22px 22px;
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .notification-bar.show { transform: translate(-50%, 0); }
+
+        .notification-bar .notif-icon {
+            font-size: 15px;
+            color: var(--accent-4);
+            animation: bellRing 1.2s ease 2;
+            flex-shrink: 0;
+        }
+
+        @keyframes bellRing {
+            0%, 100% { transform: rotate(0); }
+            20% { transform: rotate(14deg); }
+            40% { transform: rotate(-12deg); }
+            60% { transform: rotate(8deg); }
+            80% { transform: rotate(-4deg); }
+        }
+
+        .notification-bar .notif-content {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .notification-bar .notif-label {
+            background: linear-gradient(135deg, #1d9bf0, #0d7ecf);
+            color: #fff;
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 3px 11px;
+            border-radius: 20px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 10px rgba(29, 155, 240, 0.4);
+            flex-shrink: 0;
+        }
+
+        .notification-bar .notif-text {
+            color: #e8eaf0;
+            font-size: 12.5px;
+            font-weight: 500;
+        }
+
+        .notification-bar .notif-text strong { color: var(--accent-4); }
+
+        .notification-bar .notif-close {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s var(--transition);
+            flex-shrink: 0;
+            margin-left: 4px;
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .notification-bar .notif-close:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .notification-bar .notif-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1d9bf0, #a855f7, #f5a623);
+            width: 100%;
+            border-radius: 0 0 4px 4px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 12px rgba(29, 155, 240, 0.7);
+        }
+
+        /* ============================================================
+           WELCOME OVERLAY
+        ============================================================ */
+        .welcome-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 4, 8, 0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+            transition: opacity 1s var(--transition), visibility 1s var(--transition);
+            opacity: 1;
+            visibility: visible;
+            padding: 24px;
+        }
+
+        .welcome-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .welcome-content {
+            text-align: center;
+            color: #fff;
+            padding: 44px 36px 40px;
+            max-width: 400px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.7),
+                inset 0 1px 1px var(--glass-highlight);
+            animation: fadeUp 1s var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-content::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 140%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(79, 195, 247, 0.15), transparent 65%);
+            pointer-events: none;
+        }
+
+        .welcome-content h1 {
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f5a623, #f7c948, #4fc3f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .welcome-content p {
+            font-size: 1.05rem;
+            color: var(--text-sub);
+            margin-bottom: 26px;
+            position: relative;
+        }
+
+        .welcome-content .loader {
+            width: 44px;
+            height: 44px;
+            margin: 0 auto 26px;
+            border: 3.5px solid rgba(255, 255, 255, 0.08);
+            border-top: 3.5px solid var(--accent-1);
+            border-right: 3.5px solid var(--accent-3);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 24px rgba(79, 195, 247, 0.25);
+        }
+
+        /* ============================================================
+           TOMBOL LANJUTKAN
+        ============================================================ */
+        .btn-lanjutkan {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 44px;
+            background: linear-gradient(135deg, #1d9bf0, #0d7ecf, #a855f7);
+            background-size: 200% 200%;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 50px;
+            font-size: 15.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s var(--transition);
+            box-shadow:
+                0 8px 32px rgba(29, 155, 240, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.4px;
+            position: relative;
+            overflow: hidden;
+            animation: gradientShift 4s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .btn-lanjutkan::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 40%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+            transform: rotate(25deg);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -60%; }
+            60%, 100% { left: 130%; }
+        }
+
+        .btn-lanjutkan:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 14px 46px rgba(29, 155, 240, 0.55), inset 0 1px 1px rgba(255,255,255,0.4);
+        }
+
+        .btn-lanjutkan:active { transform: scale(0.96); }
+
+        /* ============================================================
+           MUSIC INDICATOR
+        ============================================================ */
+        .music-indicator {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(22px) saturate(180%);
+            -webkit-backdrop-filter: blur(22px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.5),
+                inset 0 1px 1px var(--glass-highlight);
+            pointer-events: none;
+            user-select: none;
+            overflow: hidden;
+            max-width: 210px;
+        }
+
+        .music-indicator.show {
+            display: flex;
+            animation: slideInRight 0.6s var(--transition);
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .music-indicator .music-icon {
+            color: var(--accent-1);
+            font-size: 18px;
+            animation: soundPulse 1.5s ease-in-out infinite;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 8px rgba(79, 195, 247, 0.6));
+        }
+
+        @keyframes soundPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.82); }
+        }
+
+        .music-text-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            flex: 1;
+            position: relative;
+        }
+
+        .music-text-scroll {
+            display: inline-block;
+            animation: scrollLeft 9s linear infinite;
+            color: var(--text-sub);
+            font-size: 11.5px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes scrollLeft {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .music-text-wrapper::before,
+        .music-text-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 18px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .music-text-wrapper::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.35), transparent);
+        }
+
+        .music-text-wrapper::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(0, 0, 0, 0.35), transparent);
+        }
+
+        /* ============================================================
+           CONTAINER UTAMA
+        ============================================================ */
+        .container {
+            max-width: 420px;
+            width: 100%;
+            padding: 40px 28px 30px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            position: relative;
+            z-index: 5;
+            background: rgba(18, 20, 28, 0.55);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow:
+                0 40px 90px -20px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(255, 255, 255, 0.03),
+                inset 0 1px 1px var(--glass-highlight),
+                inset 0 -1px 1px rgba(0, 0, 0, 0.3);
+            animation: containerIn 1.2s var(--transition) both;
+            animation-delay: 0.2s;
+            max-height: 92dvh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.15) transparent;
+        }
+
+        .container::-webkit-scrollbar { width: 6px; }
+        .container::-webkit-scrollbar-track { background: transparent; }
+        .container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        .container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        @keyframes containerIn {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 12%;
+            right: 12%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            pointer-events: none;
+        }
+
+        /* ============================================================
+           AVATAR
+        ============================================================ */
+        .avatar-wrapper {
+            position: relative;
+            width: 104px;
+            height: 104px;
+            margin: 0 auto 16px;
+        }
+
+        .avatar-glow-ring {
+            position: absolute;
+            inset: -8px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                transparent,
+                #1d9bf0,
+                #a855f7,
+                #f5a623,
+                #4fc3f7,
+                #1d9bf0,
+                transparent
+            );
+            animation: spinGlow 3.5s linear infinite;
+            filter: blur(6px);
+            opacity: 0.75;
+            z-index: 0;
+        }
+
+        .avatar-glow-ring-2 {
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 120deg,
+                transparent,
+                #4fc3f7,
+                #ffd54f,
+                #ef5350,
+                #7c4dff,
+                #4fc3f7,
+                transparent
+            );
+            animation: spinGlow 5s linear infinite reverse;
+            filter: blur(9px);
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        @keyframes spinGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .avatar-link {
+            display: block;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: transform 0.4s var(--transition), box-shadow 0.4s var(--transition);
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.6),
+                0 0 0 4px rgba(255, 255, 255, 0.03);
+            position: relative;
+            z-index: 1;
+            margin: 4px;
+            background: #1a1a1a;
+        }
+
+        .avatar-link:hover {
+            transform: scale(1.06);
+            box-shadow:
+                0 14px 40px rgba(29, 155, 240, 0.3),
+                0 0 0 4px rgba(29, 155, 240, 0.15);
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ============================================================
+           NAMA & BADGE
+        ============================================================ */
+        .name-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 2px;
+            flex-wrap: wrap;
+        }
+
+        .name {
+            font-size: 25px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1d9bf0, #0d7ecf);
+            color: #fff;
+            font-size: 14px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 18px rgba(29, 155, 240, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            animation: pulse 2.2s ease-in-out infinite;
+        }
+
+        .verified-badge i { font-size: 10.5px; }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(29, 155, 240, 0.5); }
+            50% { box-shadow: 0 0 28px rgba(29, 155, 240, 0.85), 0 0 50px rgba(29, 155, 240, 0.25); }
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 5px 18px;
+            border-radius: 30px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-sub);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin: 5px 0 14px;
+            letter-spacing: 0.3px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        /* ============================================================
+           BIO TYPING
+        ============================================================ */
+        .bio-wrapper {
+            font-size: 13.5px;
+            color: var(--text-sub);
+            margin-bottom: 26px;
+            line-height: 1.6;
+            padding: 0 6px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #typing-text {
+            display: inline;
+            border-right: 2px solid var(--accent-1);
+            padding-right: 4px;
+            animation: blink 0.85s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: var(--accent-1); }
+            50% { border-color: transparent; }
+        }
+
+        /* ============================================================
+           TOMBOL DONASI
+        ============================================================ */
+        .donate-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            color: #f0f0f0;
+            padding: 13px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13.5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.35s var(--transition);
+            margin-bottom: 28px;
+            width: 100%;
+            max-width: 280px;
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .donate-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(245, 166, 35, 0.12), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.35s var(--transition);
+        }
+
+        .donate-btn:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(245, 166, 35, 0.4);
+            transform: translateY(-2px);
+            box-shadow:
+                0 8px 30px rgba(245, 166, 35, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+
+        .donate-btn:hover::before { opacity: 1; }
+
+        .donate-btn i {
+            font-size: 15px;
+            color: var(--accent-4);
+            filter: drop-shadow(0 0 6px rgba(245, 166, 35, 0.5));
+            position: relative;
+        }
+
+        .donate-btn span { position: relative; }
+
+        /* ============================================================
+           SOCIAL GRID
+        ============================================================ */
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 11px;
+            margin-bottom: 28px;
+        }
+
+        .social-item {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 16px 4px 13px;
+            border-radius: var(--radius-sm);
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .social-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.6s var(--transition);
+        }
+
+        .social-item:hover::after { left: 100%; }
+
+        .social-item i {
+            font-size: 23px;
+            color: #d0d4e0;
+            transition: all 0.3s var(--transition);
+        }
+
+        .social-item span {
+            font-size: 10px;
+            opacity: 0.65;
+            letter-spacing: 0.3px;
+            transition: opacity 0.3s;
+        }
+
+        .social-item:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.18);
+            transform: translateY(-4px);
+            box-shadow:
+                0 10px 28px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .social-item:hover i {
+            color: #fff;
+            transform: scale(1.12);
+        }
+
+        .social-item:hover span { opacity: 1; }
+
+        .social-item[data-platform="discord"]:hover   { border-color: rgba(88, 101, 242, 0.5); }
+        .social-item[data-platform="discord"]:hover i { color: #5865F2; }
+        .social-item[data-platform="facebook"]:hover   { border-color: rgba(24, 119, 242, 0.5); }
+        .social-item[data-platform="facebook"]:hover i { color: #1877F2; }
+        .social-item[data-platform="youtube"]:hover    { border-color: rgba(255, 0, 0, 0.5); }
+        .social-item[data-platform="youtube"]:hover i  { color: #FF0000; }
+        .social-item[data-platform="whatsapp"]:hover   { border-color: rgba(37, 211, 102, 0.5); }
+        .social-item[data-platform="whatsapp"]:hover i { color: #25D366; }
+        .social-item[data-platform="twitter"]:hover    { border-color: rgba(255, 255, 255, 0.4); }
+        .social-item[data-platform="twitter"]:hover i  { color: #ffffff; }
+        .social-item[data-platform="instagram"]:hover  { border-color: rgba(225, 48, 108, 0.5); }
+        .social-item[data-platform="instagram"]:hover i { color: #E1306C; }
+
+        /* ============================================================
+           GALERI ALBUM FOTO
+        ============================================================ */
+        .gallery-section {
+            margin-top: 8px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            animation: fadeUp 1s var(--transition) both;
+            animation-delay: 0.6s;
+        }
+
+        .gallery-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .gallery-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.2px;
+        }
+
+        .gallery-title i {
+            font-size: 15px;
+            background: linear-gradient(135deg, #4fc3f7, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 6px rgba(79, 195, 247, 0.5));
+        }
+
+        .gallery-count {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            letter-spacing: 0.4px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow:
+                0 4px 16px rgba(0, 0, 0, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            transition: all 0.4s var(--transition);
+            animation: galleryItemIn 0.7s var(--transition) both;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .gallery-item:nth-child(1) { animation-delay: 0.05s; }
+        .gallery-item:nth-child(2) { animation-delay: 0.10s; }
+        .gallery-item:nth-child(3) { animation-delay: 0.15s; }
+        .gallery-item:nth-child(4) { animation-delay: 0.20s; }
+        .gallery-item:nth-child(5) { animation-delay: 0.25s; }
+        .gallery-item:nth-child(6) { animation-delay: 0.30s; }
+        .gallery-item:nth-child(n+7) { animation-delay: 0.35s; }
+
+        @keyframes galleryItemIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.92); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s var(--transition), filter 0.4s var(--transition);
+            filter: brightness(0.9) saturate(1.05);
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(79, 195, 247, 0.15), rgba(168, 85, 247, 0.15));
+            opacity: 0;
+            transition: opacity 0.4s var(--transition);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .gallery-item::after {
+            content: '\f00e';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #fff;
+            opacity: 0;
+            transform: scale(0.6);
+            transition: all 0.4s var(--transition);
+            z-index: 2;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-4px) scale(1.02);
+            border-color: rgba(79, 195, 247, 0.4);
+            box-shadow:
+                0 12px 32px rgba(0, 0, 0, 0.5),
+                0 0 24px rgba(79, 195, 247, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.12);
+            filter: brightness(1) saturate(1.15);
+        }
+
+        .gallery-item:hover::before { opacity: 1; }
+        .gallery-item:hover::after { opacity: 1; transform: scale(1); }
+        .gallery-item:active { transform: scale(0.97); }
+
+        .gallery-item.skeleton {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.03) 0%,
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.03) 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ============================================================
+           LIGHTBOX
+        ============================================================ */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: rgba(3, 4, 8, 0.94);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s var(--transition), visibility 0.4s var(--transition);
+            padding: 60px 20px 20px;
+        }
+
+        .lightbox.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-inner {
+            position: relative;
+            max-width: 92vw;
+            max-height: 78vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: scale(0.85);
+            transition: transform 0.5s var(--transition);
+        }
+
+        .lightbox.show .lightbox-inner { transform: scale(1); }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 78vh;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 40px 100px rgba(0, 0, 0, 0.9),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            object-fit: contain;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s var(--transition);
+            z-index: 10;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close:hover {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.5);
+            transform: rotate(90deg) scale(1.08);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s var(--transition);
+            z-index: 10;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            user-select: none;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(79, 195, 247, 0.25);
+            border-color: rgba(79, 195, 247, 0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .lightbox-nav:active { transform: translateY(-50%) scale(0.94); }
+
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
+
+        .lightbox-info {
+            position: absolute;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #fff;
+            max-width: 90vw;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .lightbox-counter {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 5px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            margin-bottom: 8px;
+        }
+
+        .lightbox-caption {
+            font-size: 13px;
+            color: var(--text-sub);
+            font-weight: 500;
+            padding: 0 12px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+        }
+
+        .lightbox-thumbs {
+            position: absolute;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            padding: 8px 12px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            max-width: 92vw;
+            overflow-x: auto;
+            scrollbar-width: none;
+            z-index: 10;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-thumbs::-webkit-scrollbar { display: none; }
+
+        .lightbox-thumb {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.5;
+            transition: all 0.3s var(--transition);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .lightbox-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .lightbox-thumb:hover {
+            opacity: 0.85;
+            transform: scale(1.05);
+        }
+
+        .lightbox-thumb.active {
+            opacity: 1;
+            border-color: var(--accent-1);
+            box-shadow: 0 0 16px rgba(79, 195, 247, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* ============================================================
+           FOOTER
+        ============================================================ */
+        .footer {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 20px;
+            margin-top: 24px;
+            letter-spacing: 0.3px;
+            line-height: 1.7;
+        }
+
+        .footer a {
+            color: var(--accent-1);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s var(--transition);
+            position: relative;
+        }
+
+        .footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-1);
+            transition: width 0.3s var(--transition);
+        }
+
+        .footer a:hover { color: #7dd3fc; }
+        .footer a:hover::after { width: 100%; }
+
+        /* ============================================================
+           ANIMASI TAMBAHAN
+        ============================================================ */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           BODY LOCK SAAT LIGHTBOX
+        ============================================================ */
+        body.lightbox-open { overflow: hidden; }
+
+        /* ============================================================
+           RESPONSIF
+        ============================================================ */
+        @media (max-width: 420px) {
+            .container {
+                padding: 32px 20px 24px;
+                border-radius: 28px;
+            }
+            .avatar-wrapper { width: 88px; height: 88px; }
+            .avatar-glow-ring { inset: -7px; }
+            .avatar-glow-ring-2 { inset: -3px; }
+            .avatar-link { width: 80px; height: 80px; margin: 4px; }
+            .name { font-size: 21px; }
+            .verified-badge { width: 19px; height: 19px; }
+            .verified-badge i { font-size: 9px; }
+            .social-item { padding: 13px 2px 11px; border-radius: 12px; }
+            .social-item i { font-size: 20px; }
+            .social-item span { font-size: 9px; }
+            .donate-btn {
+                padding: 11px 18px;
+                font-size: 12.5px;
+                max-width: 240px;
+            }
+            .bio-wrapper { font-size: 12.5px; min-height: 40px; }
+            .welcome-content { padding: 36px 24px 32px; }
+            .welcome-content h1 { font-size: 1.75rem; }
+            .welcome-content p { font-size: 0.95rem; }
+            .btn-lanjutkan { padding: 12px 34px; font-size: 14px; }
+            .music-indicator {
+                max-width: 170px;
+                padding: 9px 14px;
+                bottom: 16px;
+                right: 16px;
+            }
+            .music-indicator .music-icon { font-size: 15px; }
+            .music-text-scroll { font-size: 10px; }
+            .notification-bar .notif-text { font-size: 11px; }
+            .notification-bar {
+                padding: 11px 14px;
+                gap: 8px;
+                border-radius: 0 0 18px 18px;
+            }
+            .notification-bar .notif-icon { font-size: 13px; }
+            .notification-bar .notif-label { font-size: 8.5px; padding: 2px 8px; }
+            .datetime-widget {
+                top: 12px;
+                right: 12px;
+                padding: 8px 13px;
+                min-width: 96px;
+                border-radius: 16px;
+            }
+            .datetime-widget .time { font-size: 18px; }
+            .datetime-widget .date { font-size: 9.5px; }
+            .blob-1, .blob-2 { width: 260px; height: 260px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .gallery-title { font-size: 13.5px; }
+            .gallery-count { font-size: 10px; }
+            .lightbox { padding: 60px 12px 12px; }
+            .lightbox-close { top: 14px; right: 14px; width: 40px; height: 40px; }
+            .lightbox-nav { width: 42px; height: 42px; font-size: 16px; }
+            .lightbox-prev { left: 8px; }
+            .lightbox-next { right: 8px; }
+            .lightbox-thumb { width: 38px; height: 38px; }
+            .lightbox-caption { font-size: 12px; }
+            .lightbox-info { bottom: 78px; }
+        }
+
+        @media (max-width: 360px) {
+            .social-grid { grid-template-columns: 1fr 1fr; }
+            .music-indicator { max-width: 145px; }
+            .notification-bar .notif-text { font-size: 10px; }
+            .datetime-widget .time { font-size: 16px; }
+            .name { font-size: 19px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .liquid-blob { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== BACKGROUND ===== -->
+    <div class="bg-image" style="background-image: url('https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg');"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- ===== LIQUID BLOBS ===== -->
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+
+    <!-- ===== PARTIKEL ===== -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ===== JAM & TANGGAL ===== -->
+    <div class="datetime-widget" id="datetimeWidget">
+        <div class="time" id="clockTime">00:00:00</div>
+        <div class="date" id="clockDate"><i class="fas fa-calendar-alt"></i> 00 Januari 0000</div>
+    </div>
+
+    <!-- ===== NOTIFIKASI ===== -->
+    <div id="notificationBar" class="notification-bar">
+        <i class="fas fa-bell notif-icon"></i>
+        <div class="notif-content">
+            <span class="notif-label">NOTIFIKASI ⚠️</span>
+            <span class="notif-text">
+                <strong>🎉 YOUU HALLOO!</strong> Terimakasih Udah Berkunjung Di Sosial media ku
+            </span>
+        </div>
+        <i class="fas fa-times notif-close" id="notifClose"></i>
+        <div class="notif-progress" id="notifProgress"></div>
+    </div>
+
+    <!-- ===== WELCOME OVERLAY ===== -->
+    <div id="welcomeOverlay" class="welcome-overlay">
+        <div class="welcome-content">
+            <h1>✨ Selamat Datang</h1>
+            <p>di Profil Rizz.yeyo</p>
+            <div class="loader"></div>
+            <button class="btn-lanjutkan" id="btnLanjutkan">
+                <i class="fas fa-play"></i> Lanjutkan
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== KARTU PROFIL UTAMA ===== -->
+    <div class="container">
+
+        <!-- Avatar -->
+        <div class="avatar-wrapper">
+            <div class="avatar-glow-ring"></div>
+            <div class="avatar-glow-ring-2"></div>
+            <a href="#" class="avatar-link" target="_blank">
+                <img src="https://c.termai.cc/i137/fhGo.png" alt="Rizz.yeyo" class="avatar" loading="lazy" />
+            </a>
+        </div>
+
+        <!-- Nama -->
+        <div class="name-wrapper">
+            <span class="name">RISKY DWI NUGROHO</span>
+            <span class="verified-badge">
+                <i class="fas fa-check"></i>
+            </span>
+        </div>
+
+        <!-- Badge -->
+        <div class="badge">💻 IT Engineering | Developer Website</div>
+
+        <!-- Bio Typing -->
+        <div class="bio-wrapper">
+            <span id="typing-text"></span>
+        </div>
+
+        <!-- Tombol Donasi -->
+        <a href="https://kitabisa.com/" class="donate-btn" target="_blank">
+            <i class="fas fa-hand-holding-heart"></i>
+            <span>Donasi Kemanusiaan & Korban Bencana</span>
+        </a>
+
+        <!-- Social Grid -->
+        <div class="social-grid">
+            <a href="https://discord.gg/r2XkSNKGp" class="social-item" data-platform="discord" target="_blank">
+                <i class="fab fa-discord"></i>
+                <span>Discord</span>
+            </a>
+            <a href="https://www.facebook.com/KyyEveryday" class="social-item" data-platform="facebook" target="_blank">
+                <i class="fab fa-facebook"></i>
+                <span>Facebook</span>
+            </a>
+            <a href="https://youtube.com/@kyyeveryday" class="social-item" data-platform="youtube" target="_blank">
+                <i class="fab fa-youtube"></i>
+                <span>YouTube</span>
+            </a>
+            <a href="https://wa.me/6285708558412" class="social-item" data-platform="whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+            </a>
+            <a href="https://x.com/Risky_DN26" class="social-item" data-platform="twitter" target="_blank">
+                <i class="fab fa-x-twitter"></i>
+                <span>X-Twitter</span>
+            </a>
+            <a href="https://instagram.com/rizz.yeyo" class="social-item" data-platform="instagram" target="_blank">
+                <i class="fab fa-instagram"></i>
+                <span>Instagram</span>
+            </a>
+        </div>
+
+        <!-- ===== GALERI ALBUM FOTO ===== -->
+        <div class="gallery-section">
+            <div class="gallery-header">
+                <div class="gallery-title">
+                    <i class="fas fa-images"></i>
+                    <span>Album Foto</span>
+                </div>
+                <div class="gallery-count" id="galleryCount">0 Foto</div>
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            CONTACT BUSINESS <a href="https://mail.google.com" target="_blank">riskydwin26@gmail.com</a>
+        </div>
+
+    </div>
+
+    <!-- ===== MUSIC INDICATOR ===== -->
+    <div class="music-indicator" id="musicIndicator">
+        <i class="fas fa-music music-icon"></i>
+        <div class="music-text-wrapper">
+            <span class="music-text-scroll">🎵 Dunia Yang Nanti • Raim Laode</span>
+        </div>
+    </div>
+
+    <!-- ===== LIGHTBOX FOTO ===== -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Tutup">
+            <i class="fas fa-times"></i>
+        </button>
+        <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Sebelumnya">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Berikutnya">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <div class="lightbox-inner">
+            <img src="" alt="" class="lightbox-img" id="lightboxImg" />
+        </div>
+
+        <div class="lightbox-info">
+            <div class="lightbox-counter" id="lightboxCounter">1 / 6</div>
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+
+        <div class="lightbox-thumbs" id="lightboxThumbs"></div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        /* ============================================================
+           1. JAM & TANGGAL REAL-TIME
+        ============================================================ */
+        (function initClock() {
+            const clockTime = document.getElementById('clockTime');
+            const clockDate = document.getElementById('clockDate');
+
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = [
+                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+            ];
+
+            function update() {
+                const now = new Date();
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                const s = String(now.getSeconds()).padStart(2, '0');
+                clockTime.textContent = `${h}:${m}:${s}`;
+
+                const dayName = days[now.getDay()];
+                const day = String(now.getDate()).padStart(2, '0');
+                const month = months[now.getMonth()];
+                const year = now.getFullYear();
+                clockDate.innerHTML = `<i class="fas fa-calendar-alt"></i> ${dayName}, ${day} ${month} ${year}`;
+            }
+
+            update();
+            setInterval(update, 1000);
+        })();
+
+        /* ============================================================
+           2. NOTIFIKASI BAR
+        ============================================================ */
+        (function initNotification() {
+            const bar = document.getElementById('notificationBar');
+            const closeBtn = document.getElementById('notifClose');
+            const progress = document.getElementById('notifProgress');
+            const DURATION = 5500;
+            let hideTimer = null;
+            let progressTimer = null;
+
+            function show() {
+                bar.classList.add('show');
+                progress.style.width = '100%';
+
+                const start = Date.now();
+                clearInterval(progressTimer);
+                progressTimer = setInterval(() => {
+                    const elapsed = Date.now() - start;
+                    const remain = Math.max(0, 1 - elapsed / DURATION);
+                    progress.style.width = (remain * 100) + '%';
+                }, 50);
+
+                clearTimeout(hideTimer);
+                hideTimer = setTimeout(hide, DURATION);
+            }
+
+            function hide() {
+                bar.classList.remove('show');
+                clearTimeout(hideTimer);
+                clearInterval(progressTimer);
+                progress.style.width = '0%';
+            }
+
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                hide();
+            });
+
+            bar.addEventListener('click', (e) => {
+                if (e.target === closeBtn || e.target.closest('.notif-close')) return;
+                window.open('https://kitabisa.com/', '_blank');
+                hide();
+            });
+
+            window.__showNotification = show;
+        })();
+
+        /* ============================================================
+           3. KONFIGURASI
+        ============================================================ */
+        const CONFIG = {
+            musicUrl: 'https://www.image2url.com/r2/default/audio/1789015293596-6a2747fc-2c9f-41e4-852d-6f20b1cd0436.mp3',
+            typingText: 'Beginilah kamu! kamu menyukai mereka, padahal mereka tidak menyukaimu.. QS. Ali - Imran :119',
+            volume: 1.0
+        };
+
+        /* ============================================================
+           4. MUSIC PLAYER
+        ============================================================ */
+        const audio = new Audio(CONFIG.musicUrl);
+        audio.loop = true;
+        audio.volume = CONFIG.volume;
+
+        let isMusicPlaying = false;
+        const btnLanjutkan = document.getElementById('btnLanjutkan');
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const musicIndicator = document.getElementById('musicIndicator');
+
+        function playMusic() {
+            if (isMusicPlaying) return;
+            audio.play().then(() => {
+                isMusicPlaying = true;
+                btnLanjutkan.innerHTML = '<i class="fas fa-check"></i> Musik Diputar';
+                btnLanjutkan.style.background = 'linear-gradient(135deg, #00c853, #00a844)';
+                btnLanjutkan.style.boxShadow = '0 8px 32px rgba(0, 200, 83, 0.45)';
+                musicIndicator.classList.add('show');
+            }).catch(err => {
+                console.warn('Gagal memutar musik:', err);
+            });
+        }
+
+        /* ============================================================
+           5. TYPING EFFECT
+        ============================================================ */
+        const typingEl = document.getElementById('typing-text');
+        let typeIndex = 0;
+        let isDeleting = false;
+        let typingStarted = false;
+
+        function typeEffect() {
+            if (!typingStarted) typingStarted = true;
+
+            if (!isDeleting) {
+                if (typeIndex < CONFIG.typingText.length) {
+                    typingEl.textContent = CONFIG.typingText.substring(0, typeIndex + 1);
+                    typeIndex++;
+                    setTimeout(typeEffect, 48);
+                } else {
+                    isDeleting = true;
+                    setTimeout(typeEffect, 3200);
+                }
+            } else {
+                if (typeIndex > 0) {
+                    typingEl.textContent = CONFIG.typingText.substring(0, typeIndex - 1);
+                    typeIndex--;
+                    setTimeout(typeEffect, 26);
+                } else {
+                    isDeleting = false;
+                    setTimeout(typeEffect, 600);
+                }
+            }
+        }
+
+        /* ============================================================
+           6. TOMBOL LANJUTKAN
+        ============================================================ */
+        btnLanjutkan.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playMusic();
+            welcomeOverlay.classList.add('hidden');
+
+            setTimeout(() => {
+                if (window.__showNotification) window.__showNotification();
+            }, 900);
+
+            setTimeout(() => {
+                if (!typingStarted) typeEffect();
+            }, 700);
+        });
+
+        setTimeout(() => {
+            if (!typingStarted && welcomeOverlay.classList.contains('hidden')) {
+                typeEffect();
+            }
+        }, 12000);
+
+        /* ============================================================
+           7. PARTIKEL CANVAS
+        ============================================================ */
+        (function initParticles() {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let particles = [];
+            const COUNT = window.innerWidth < 480 ? 45 : 80;
+            const MAX_SPEED = 0.5;
+            const CONNECT_DIST = 130;
+            const mouse = { x: null, y: null, radius: 140 };
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            window.addEventListener('mouseleave', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches[0]) {
+                    mouse.x = e.touches[0].clientX;
+                    mouse.y = e.touches[0].clientY;
+                }
+            }, { passive: true });
+            window.addEventListener('touchend', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            const colors = [
+                'rgba(79, 195, 247, OPACITY)',
+                'rgba(168, 85, 247, OPACITY)',
+                'rgba(245, 166, 35, OPACITY)',
+                'rgba(255, 255, 255, OPACITY)'
+            ];
+
+            class Particle {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.vx = (Math.random() - 0.5) * MAX_SPEED * 2;
+                    this.vy = (Math.random() - 0.5) * MAX_SPEED * 2;
+                    this.radius = Math.random() * 2.4 + 1.2;
+                    this.baseOpacity = Math.random() * 0.45 + 0.25;
+                    this.color = colors[Math.floor(Math.random() * colors.length)];
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (mouse.x !== null) {
+                        const dx = this.x - mouse.x;
+                        const dy = this.y - mouse.y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < mouse.radius) {
+                            const force = (mouse.radius - dist) / mouse.radius;
+                            this.x += (dx / dist) * force * 2.2;
+                            this.y += (dy / dist) * force * 2.2;
+                        }
+                    }
+
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color.replace('OPACITY', this.baseOpacity);
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+            function drawLines() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < CONNECT_DIST) {
+                            const op = (1 - dist / CONNECT_DIST) * 0.35;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(160, 190, 255, ${op})`;
+                            ctx.lineWidth = 0.7;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                for (const p of particles) {
+                    p.update();
+                    p.draw();
+                }
+                drawLines();
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+        /* ============================================================
+           8. RIPPLE AVATAR
+        ============================================================ */
+        document.querySelector('.avatar-link').addEventListener('click', function () {
+            const ripple = document.createElement('span');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.5);
+                transform: scale(0);
+                animation: rippleAnim 0.7s ease-out forwards;
+                pointer-events: none;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+            `;
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 700);
+        });
+
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes rippleAnim {
+                to { transform: scale(2.2); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        /* ============================================================
+           9. PAUSE/RESUME MUSIK SAAT TAB TIDAK AKTIF
+        ============================================================ */
+        document.addEventListener('visibilitychange', () => {
+            if (!isMusicPlaying) return;
+            if (document.hidden) {
+                audio.pause();
+            } else {
+                audio.play().catch(() => {});
+            }
+        });
+
+        /* ============================================================
+           10. GALERI ALBUM FOTO
+        ============================================================ */
+        (function initGallery() {
+            // ======================================================
+            // KONFIGURASI — GANTI DAFTAR FOTO DI SINI
+            // Format: { src: 'url.jpg', caption: 'Judul Foto' }
+            // ======================================================
+            const PHOTOS = [
+                { src: 'https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg', caption: 'Momen 1' },
+                { src: 'https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg', caption: 'Momen 2' },
+                { src: 'https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg', caption: 'Momen 3' },
+                { src: 'https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg', caption: 'Momen 4' },
+                { src: 'https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg', caption: 'Momen 5' },
+                { src: 'https://raw.githubusercontent.com/Kyyjeje/Foto-thumb/main/risky.jpg', caption: 'Momen 6' }
+                // Tambah foto lain di sini 👇
+                // { src: 'foto-lokal.jpg', caption: 'Foto Lokal' },
+                // { src: 'https://contoh.com/gambar.jpg', caption: 'Foto Online' },
+            ];
+
+            const grid = document.getElementById('galleryGrid');
+            const countEl = document.getElementById('galleryCount');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxCounter = document.getElementById('lightboxCounter');
+            const lightboxCaption = document.getElementById('lightboxCaption');
+            const lightboxThumbs = document.getElementById('lightboxThumbs');
+            const btnPrev = document.getElementById('lightboxPrev');
+            const btnNext = document.getElementById('lightboxNext');
+            const btnClose = document.getElementById('lightboxClose');
+
+            if (!grid || PHOTOS.length === 0) return;
+
+            let currentIndex = 0;
+
+            countEl.textContent = PHOTOS.length + ' Foto';
+
+            // ---- Build grid ----
+            PHOTOS.forEach((photo, i) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item skeleton';
+                item.dataset.index = i;
+                item.setAttribute('role', 'button');
+                item.setAttribute('tabindex', '0');
+                item.setAttribute('aria-label', 'Buka foto: ' + (photo.caption || 'Foto ' + (i + 1)));
+
+                const img = document.createElement('img');
+                img.alt = photo.caption || 'Foto ' + (i + 1);
+                img.loading = 'lazy';
+                img.decoding = 'async';
+
+                img.addEventListener('load', () => item.classList.remove('skeleton'));
+                img.addEventListener('error', () => {
+                    item.classList.remove('skeleton');
+                    img.style.opacity = '0.3';
+                });
+
+                img.src = photo.src;
+                item.appendChild(img);
+
+                item.addEventListener('click', () => openLightbox(i));
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openLightbox(i);
+                    }
+                });
+
+                grid.appendChild(item);
+            });
+
+            // ---- Build thumbnails ----
+            PHOTOS.forEach((photo, i) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'lightbox-thumb';
+                thumb.dataset.index = i;
+                thumb.setAttribute('role', 'button');
+                thumb.setAttribute('aria-label', 'Lihat foto ' + (i + 1));
+
+                const tImg = document.createElement('img');
+                tImg.src = photo.src;
+                tImg.alt = photo.caption || 'Thumb ' + (i + 1);
+                tImg.loading = 'lazy';
+                thumb.appendChild(tImg);
+
+                thumb.addEventListener('click', () => goTo(i));
+                lightboxThumbs.appendChild(thumb);
+            });
+
+            function openLightbox(index) {
+                currentIndex = index;
+                updateLightbox();
+                lightbox.classList.add('show');
+                document.body.classList.add('lightbox-open');
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('show');
+                document.body.classList.remove('lightbox-open');
+            }
+
+            function goTo(index) {
+                currentIndex = (index + PHOTOS.length) % PHOTOS.length;
+                updateLightbox();
+            }
+
+            function updateLightbox() {
+                const photo = PHOTOS[currentIndex];
+                lightboxImg.src = photo.src;
+                lightboxImg.alt = photo.caption || 'Foto ' + (currentIndex + 1);
+                lightboxCounter.textContent = (currentIndex + 1) + ' / ' + PHOTOS.length;
+                lightboxCaption.textContent = photo.caption || '';
+
+                lightboxThumbs.querySelectorAll('.lightbox-thumb').forEach((t, i) => {
+                    t.classList.toggle('active', i === currentIndex);
+                });
+
+                const activeThumb = lightboxThumbs.querySelector('.lightbox-thumb.active');
+                if (activeThumb) {
+                    activeThumb.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                        inline: 'center'
+                    });
+                }
+
+                [currentIndex + 1, currentIndex - 1].forEach(i => {
+                    const idx = (i + PHOTOS.length) % PHOTOS.length;
+                    if (PHOTOS[idx]) {
+                        const pre = new Image();
+                        pre.src = PHOTOS[idx].src;
+                    }
+                });
+            }
+
+            btnClose.addEventListener('click', closeLightbox);
+            btnPrev.addEventListener('click', () => goTo(currentIndex - 1));
+            btnNext.addEventListener('click', () => goTo(currentIndex + 1));
+
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox || e.target.classList.contains('lightbox-inner')) {
+                    closeLightbox();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (!lightbox.classList.contains('show')) return;
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') goTo(currentIndex - 1);
+                if (e.key === 'ArrowRight') goTo(currentIndex + 1);
+            });
+
+            // Swipe gesture
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchMoved = false;
+
+            lightbox.addEventListener('touchstart', (e) => {
+                if (!e.touches[0]) return;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                touchMoved = false;
+            }, { passive: true });
+
+            lightbox.addEventListener('touchmove', (e) => {
+                if (!e.touches[0]) return;
+                const dx = e.touches[0].clientX - touchStartX;
+                const dy = e.touches[0].clientY - touchStartY;
+                if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+                    touchMoved = true;
+                }
+            }, { passive: true });
+
+            lightbox.addEventListener('touchend', (e) => {
+                if (!touchMoved) return;
+                const touch = e.changedTouches[0];
+                if (!touch) return;
+                const dx = touch.clientX - touchStartX;
+                const dy = touch.clientY - touchStartY;
+
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+                    if (dx > 0) goTo(currentIndex - 1);
+                    else goTo(currentIndex + 1);
+                }
+            }, { passive: true });
+        })();
+    </script>
+
+</body>
+</html>
